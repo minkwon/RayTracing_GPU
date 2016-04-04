@@ -2,9 +2,14 @@
  * Created by minkwon on 4/04/2016.
  */
 
-function alertOne(x) {
-    return x + 1;
+
+function Enum(constantsList) {
+    for (var i in constantsList) {
+        this[constantsList[i]] = i;
+    }
 }
+
+var ObjTyp = new Enum(['EMPTY', 'SPHERE', 'CUBOID', 'CYLINDER', 'CONE', 'TRIANGLE']);
 
 var fps = { startTime : 0, frameNumber : 0,
     getFPS : function() {

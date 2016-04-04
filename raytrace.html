@@ -3,6 +3,7 @@
 <head>
     <script src="js/gpu.js"></script>
     <script src="js/helper.js"></script>
+    <script src="js/scene.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title>Ray tracing with javascript using GPU.js</title>
@@ -40,6 +41,9 @@
                 debug: true,
                 graphical: true,
                 safeTextureReadHack: false,
+                constants: { OBJCOUNT: objects[0],
+                    EMPTY: ObjTyp.EMPTY,    SPHERE: ObjTyp.SPHERE,   CUBOID: ObjTyp.CUBOID,
+                    CYLINDER: ObjTyp.CYLINDER,   CONE: ObjTyp.CONE,   TRIANGLE: ObjTyp.TRIANGLE },
                 mode: mode
             };
             var kernalCreatorExpression = gpu.createKernel(function(Camera, Lights, Objects) {
@@ -47,14 +51,6 @@
             }, opt);
             return kernalCreatorExpression;
         }
-
-//        var render = gpu.createKernel(function() {
-//            this.color(0.95,0.95,0.95, 1);
-//            if (this.thread.x >= 50) {
-//                this.color(1,0,0);
-//            }
-//        }, opt);
-
 
         gpuMode = renderWith("gpu");
         gpuMode(0,0,0);
