@@ -35,8 +35,8 @@
     //        }, opt);
 
 
-    // function that calculates vectors for camera
-    function getCameraVectors(Camera) {
+    // function that calculates vectors, field of view and pixel size with given Camera
+    function getPerspectiveInfo(Camera) {
         var viewPoint = new THREE.Vector3(Camera[0], Camera[1], Camera[2]),
         direction = new THREE.Vector3(Camera[3], Camera[4], Camera[5]),
         fov = Camera[6],
@@ -68,7 +68,7 @@
         ];
         return cameraUnitVectors;
     }
-    var cV = getCameraVectors(camera);
+    var cV = getPerspectiveInfo(camera);
 
 
 
@@ -85,20 +85,31 @@
             mode: mode
         };
         var kernalCreatorExpression = gpu.createKernel(function(Camera, Lights, Objects, camVect) {
-//            this.color(0.95, 0.95, 0.95); // Grey background color
-            // scaling
-            var right_x = camVect[3] * (this.thread.x * camVect[11] - camVect[9] * 0.5);
-            var right_y = camVect[4] * (this.thread.x * camVect[11] - camVect[9] * 0.5);
-            var right_z = camVect[5] * (this.thread.x * camVect[11] - camVect[9] * 0.5);
 
-            var up_x = camVect[6] * (this.thread.y * camVect[12] - camVect[10] * 0.5);
-            var up_y = camVect[7] * (this.thread.y * camVect[12] - camVect[10] * 0.5);
-            var up_z = camVect[8] * (this.thread.y * camVect[12] - camVect[10] * 0.5);
+            // Ray casting
 
-            var ray_x = Math.sqrt(1);
-            var ray_y = Math.sqrt(2);
-            var ray_z = Math.sqrt(3);
-            this.color(up_x, up_y, up_z);
+            // Ray of pixel(x,y) = eye vector + right vector of x + up vector of y
+            // the factor is subtracted by half of camera width so eventually rays are centered at eye vector
+
+            // scaling camera's right unit vector with (pixel width * thread.x - half of camera width)
+            var right_x = camVect[3] * (this.thread.x * camVect[11] - camVect[9] * 0.5),
+            right_y = camVect[4] * (this.thread.x * camVect[11] - camVect[9] * 0.5),
+            right_z = camVect[5] * (this.thread.x * camVect[11] - camVect[9] * 0.5);
+            // same goes for camera's up unit vector, scaling with (pixel height * thread.y - half of camera height)
+            var up_x = camVect[6] * (this.thread.y * camVect[12] - camVect[10] * 0.5),
+            up_y = camVect[7] * (this.thread.y * camVect[12] - camVect[10] * 0.5),
+            up_z = camVect[8] * (this.thread.y * camVect[12] - camVect[10] * 0.5);
+            // summing eye vector, right vector, up vector
+            var sum_x = camVect[0] + right_x + up_x,
+            sum_y = camVect[1] + right_y + up_y,
+            sum_z = camVect[2] + right_z + up_z;
+            var length = Math.sqrt(Math.pow(sum_x, 2) + Math.pow(sum_y, 2) + Math.pow(sum_z, 2));
+            // Nomalizing ray vector
+            var ray_x = sum_x / length,
+            ray_y = sum_y / length,
+            ray_z = sum_z / length;
+
+            this.color(ray_x, ray_y, ray_z);
         }, opt);
         return kernalCreatorExpression;
     }
