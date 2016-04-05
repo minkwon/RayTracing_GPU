@@ -2,9 +2,9 @@
  * Created by minkwon on 4/04/2016.
  */
 var camera = [
-    0,1,2,                     // x,y,z coordinates
-    4,4,4,                     // Direction normal vector
-    45                         // field of view : example 45
+    0,10,0,                    // x,y,z coordinates
+    0,10,-8,                   // viewing direction
+    65                        // field of view : example 45
 ];
 
 var lights = [
