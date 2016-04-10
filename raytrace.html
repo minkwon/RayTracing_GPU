@@ -338,6 +338,7 @@
         }
         // animation goes here
         m = (m + 3) % 360;
+        objects[23] = 120 * Math.cos((m / 360) * 2 * Math.PI);
         objects[11] = 120 * Math.cos((m / 360) * 2 * Math.PI);
         objects[36] = 65 * Math.cos((m / 360) * 2 * Math.PI) - 60;
         objects[38] = 65 * Math.sin((m / 360) * 2 * Math.PI) + 200;

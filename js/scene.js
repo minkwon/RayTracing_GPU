@@ -14,8 +14,12 @@ var lights = [
 ];
 
 var objects = [
-    3,                                                                             // 0 number of objects
-    ObjTyp.SPHERE,      13, 1.0,0.5,0.5, 0.9,0.7,0.3,1.0, -60,0,200,50,           // typ,recsz,r,g,b,spec,lamb,amb,opac, x,y,z,rad,
-    ObjTyp.SPHERE,      13, 0.5,0.5,0.1, 0.9,0.7,0.3,1.0, 60,50,200,50,           // typ,recsz,r,g,b,spec,lamb,amb,opac, x,y,z,rad,
-    ObjTyp.SPHERE,      13, 0.5,1.0,0.5, 0.9,0.7,0.3,1.0, 0, 50,200,3
+    7,                                                                             //number of objects
+    ObjTyp.SPHERE,      13, 0,0.5,0.5, 0.9,0.7,0.3,1.0, -60,0,200,50,           // typ,recsz,r,g,b,spec,lamb,amb,opac, x,y,z,rad,
+    ObjTyp.SPHERE,      13, 0.5,0.5,0.1, 0.9,0.7,0.3,1.0, 60,100,200,50,           // typ,recsz,r,g,b,spec,lamb,amb,opac, x,y,z,rad,
+    ObjTyp.SPHERE,      13, 0.5,1.0,0.5, 0.9,0.7,0.3,1.0, 0, 40,200,5,
+    ObjTyp.SPHERE,      13, 0.5,1.0,0.5, 0.9,0.7,0.3,1.0, 0, 0,200,10,
+    ObjTyp.SPHERE,      13, 0.5,1.0,0.5, 0.9,0.7,0.3,1.0, -10, 0,180,10,
+    ObjTyp.SPHERE,      13, 0.5,1.0,0.5, 0.9,0.7,0.3,1.0, -20, 0,160,10,
+    ObjTyp.SPHERE,      13, 0.5,1.0,0.5, 0.9,0.7,0.3,1.0, -30, 0,140,10
 ];
