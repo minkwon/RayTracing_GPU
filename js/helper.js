@@ -3,6 +3,20 @@
  */
 
 
+// 0: CPU mode, 1: GPU mode
+var selection = 1;
+
+function changeMode(el) {
+    if (el.value == "Using CPU") {
+        selection = 1;
+        el.value = "Using GPU";
+    } else {
+        selection = 0;
+        el.value = "Using CPU";
+
+    }
+}
+
 function Enum(constantsList) {
     for (var i in constantsList) {
         this[constantsList[i]] = i;
@@ -32,13 +46,13 @@ function getPerspectiveInfo(Camera) {
         rightVect = new THREE.Vector3().crossVectors(eyeUnitVect, new THREE.Vector3(0, 1, 0)),
         upVect = new THREE.Vector3().crossVectors(rightVect, eyeUnitVect),
         fovRadians = Math.PI * (fov / 2) / 180,
-        heightWidthRatio = HEIGHT / WIDTH,
+        heightWidthRatio = IMAGE_HEIGHT / IMAGE_WIDTH,
         halfWidth = Math.tan(fovRadians),
         halfHeight = heightWidthRatio * halfWidth,
         cameraWidth = halfWidth * 2,
         cameraHeight = halfHeight * 2,
-        pixelWidth = cameraWidth / (WIDTH - 1),
-        pixelHeight = cameraHeight / (HEIGHT - 1);
+        pixelWidth = cameraWidth / (IMAGE_WIDTH - 1),
+        pixelHeight = cameraHeight / (IMAGE_HEIGHT - 1);
     var cameraUnitVectors = [
         eyeUnitVect.getComponent(0),
         eyeUnitVect.getComponent(1),

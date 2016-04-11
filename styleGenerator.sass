@@ -1,0 +1,26 @@
+/*
+ * SASS style generator for multiple canvas layout
+ */
+
+// configuration CHANGE THIS
+$image_width: 300
+$image_height: 300
+$rows: 4
+$columns: 4
+// configuration end
+
+$canvas_width: $image_width / $columns
+$canvas_height: $image_height / $rows
+$leftPad: 10
+$topPad: 100
+
+
+@for $row from 0 through $rows - 1
+  @for $col from 0 through $columns - 1
+    $inverseCounter: abs($rows - 1 - $row)
+    $left: $leftPad + $canvas_width * $col
+    $top: $topPad + $canvas_height * $inverseCounter
+    #canvas#{$row}#{$col}
+      position: fixed
+      left: #{$left}px
+      top: #{$top}px

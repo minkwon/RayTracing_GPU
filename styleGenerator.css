@@ -1,0 +1,83 @@
+/* SASS style generator for multiple canvas layout
+ */
+#canvas00 {
+  position: fixed;
+  left: 10px;
+  top: 325px; }
+
+#canvas01 {
+  position: fixed;
+  left: 85px;
+  top: 325px; }
+
+#canvas02 {
+  position: fixed;
+  left: 160px;
+  top: 325px; }
+
+#canvas03 {
+  position: fixed;
+  left: 235px;
+  top: 325px; }
+
+#canvas10 {
+  position: fixed;
+  left: 10px;
+  top: 250px; }
+
+#canvas11 {
+  position: fixed;
+  left: 85px;
+  top: 250px; }
+
+#canvas12 {
+  position: fixed;
+  left: 160px;
+  top: 250px; }
+
+#canvas13 {
+  position: fixed;
+  left: 235px;
+  top: 250px; }
+
+#canvas20 {
+  position: fixed;
+  left: 10px;
+  top: 175px; }
+
+#canvas21 {
+  position: fixed;
+  left: 85px;
+  top: 175px; }
+
+#canvas22 {
+  position: fixed;
+  left: 160px;
+  top: 175px; }
+
+#canvas23 {
+  position: fixed;
+  left: 235px;
+  top: 175px; }
+
+#canvas30 {
+  position: fixed;
+  left: 10px;
+  top: 100px; }
+
+#canvas31 {
+  position: fixed;
+  left: 85px;
+  top: 100px; }
+
+#canvas32 {
+  position: fixed;
+  left: 160px;
+  top: 100px; }
+
+#canvas33 {
+  position: fixed;
+  left: 235px;
+  top: 100px; }
+
+/*# sourceMappingURL=styleGenerator.css.map */
