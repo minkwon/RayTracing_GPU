@@ -14,41 +14,134 @@
 
 <input type="button" value="Using GPU" onclick="return changeMode(this);" />
 <div id = "fps"></div>
-<div id = "mode" mode = "gpu"></div>
 <script>
 
     // configurations
+    // rows and columns must evenly divide image height/weight!
 
-    var IMAGE_WIDTH = 300;
-    var IMAGE_HEIGHT = 300;
-    // must evenly divide image pixel!
-    var ROWS = 4;
-    var COLUMNS = 4;
+    var IMAGE_WIDTH = 600;
+    var IMAGE_HEIGHT = 600;
+    var ROWS = 2;
+    var COLUMNS = 2;
+
+    var allowCPUMode = false;
+
+    // configuration ends
+
+    var CANVAS_WIDTH = IMAGE_WIDTH / COLUMNS;
+    var CANVAS_HEIGHT = IMAGE_HEIGHT / ROWS;
 
     var gpu = new GPU();
     // helper functions to be used inside the kernel
     gpu.addFunction(lightIsBlockedByObject);
     gpu.addFunction(getVectorLength);
     gpu.addFunction(dotProduct);
+    var f = document.querySelector("#fps");
 
-    // info is an array that contains unit vectors for the camera
-    // it also contains the width/height of the image and pixel
-    // These values are shared between all rays so it is calculated
-    // serially.
-    // at index:
-    // 0,1,2: camera's directional vector x, y, z
-    // 3,4,5: camera's right vector x, y, z
-    // 6,7,8: camera's up vector x, y, z
-    // 9, 10: width, height of image
-    // 11,12: width, height of each pixel
+    // button event handler, toggles between two modes
+    // 0: CPU mode, 1: GPU mode (default
+    var selection = 1;
+    if (allowCPUMode) {
+        function changeMode(el) {
+            if (el.value == "Using CPU") {
+                selection = 1;
+                el.value = "Using GPU";
+            } else {
+                selection = 0;
+                el.value = "Using CPU";
+
+            }
+        }
+    } else {
+        function changeMode(el) {
+            el.value = "not configured to use CPU";
+        }
+    }
+
+    // animation
+
+    var m = 0;
+    var cameraMoving = 0;
+    function animate() {
+        m = (m + 3) % 360;
+        objects[23] = 120 * Math.cos((m / 360) * 2 * Math.PI);
+        objects[11] = 120 * Math.cos((m / 360) * 2 * Math.PI);
+        objects[36] = 65 * Math.cos((m / 360) * 2 * Math.PI) - 60;
+        objects[38] = 65 * Math.sin((m / 360) * 2 * Math.PI) + 200;
+
+        // only recalculate perspective info if position of camera changed
+        if (cameraMoving == 1) {
+            info = getPerspectiveInfo(camera);
+        }
+    }
+
+    // This info is shared between all rays so it is calculated serially.
     var info = getPerspectiveInfo(camera);
 
+    // first render
+    var n = 0;
+    var gpuModes = [];
+    var cpuModes = [];
     for (var row = 0; row < ROWS; row++) {
         for (var col = 0; col < COLUMNS; col++) {
             var arg = [gpu, row, col, ROWS, COLUMNS, IMAGE_WIDTH, IMAGE_HEIGHT];
-            rayTrace(arg, info);
+            gpuModes.push(render('gpu', CANVAS_WIDTH, CANVAS_HEIGHT));
+            var gpuRender = gpuModes[n];
+            gpuRender(camera, lights, objects, info, arg);
+            var gpuCanvas = gpuRender.getCanvas();
+            gpuCanvas.setAttribute("id", "gpuframe" + row + col);
+            document.getElementsByTagName('body')[0].appendChild(gpuCanvas);
+            if (allowCPUMode) {
+                cpuModes.push(render('cpu', CANVAS_WIDTH, CANVAS_HEIGHT));
+                var cpuRender = cpuModes[n];
+                cpuRender(camera, lights, objects, info, arg);
+                var cpuCanvas = cpuRender.getCanvas();
+                cpuCanvas.setAttribute("id", "cpuframe" + row + col);
+                document.getElementsByTagName('body')[0].appendChild(cpuCanvas);
+            }
+            n++;
         }
     }
+    function renderLoop() {
+        n = 0;
+        for (var row = 0; row < ROWS; row++) {
+            for (var col = 0; col < COLUMNS; col++) {
+                var arg = [gpu, row, col, ROWS, COLUMNS, IMAGE_WIDTH, IMAGE_HEIGHT];
+
+                // gpu mode
+                if (selection == 1) {
+                    if (allowCPUMode) {
+                        document.getElementById("cpuframe" + row + col).style.visibility = "hidden";
+                        document.getElementById("gpuframe" + row + col).style.visibility = "visible";
+                    }
+                    var gpuRender = gpuModes[n];
+                    gpuRender(camera, lights, objects, info, arg);
+                    var previous = document.getElementById("gpuframe" + row + col);
+                    var body = previous.parentNode;
+                    var newCanvas = gpuRender.getCanvas();
+                    body.replaceChild(newCanvas, previous);
+                    newCanvas.setAttribute("id", "gpuframe" + row + col);
+
+                // cpu mode
+                } else {
+                    document.getElementById("gpuframe" + row + col).style.visibility = "hidden";
+                    document.getElementById("cpuframe" + row + col).style.visibility = "visible";
+                    var cpuRender = cpuModes[n];
+                    cpuRender(camera, lights, objects, info, arg);
+                    var previous = document.getElementById("cpuframe" + row + col);
+                    var body = previous.parentNode;
+                    var newCanvas = cpuRender.getCanvas();
+                    body.replaceChild(newCanvas, previous);
+                    newCanvas.setAttribute("id", "cpuframe" + row + col);
+                }
+                n++;
+            }
+        }
+        f.innerHTML = fps.getFPS();
+        animate();
+        requestAnimationFrame(renderLoop);
+    }
+    window.onload = renderLoop;
 
 </script>
 

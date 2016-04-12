@@ -2,21 +2,6 @@
  * Created by minkwon on 4/04/2016.
  */
 
-
-// 0: CPU mode, 1: GPU mode
-var selection = 1;
-
-function changeMode(el) {
-    if (el.value == "Using CPU") {
-        selection = 1;
-        el.value = "Using GPU";
-    } else {
-        selection = 0;
-        el.value = "Using CPU";
-
-    }
-}
-
 function Enum(constantsList) {
     for (var i in constantsList) {
         this[constantsList[i]] = i;
@@ -37,7 +22,17 @@ var fps = { startTime : 0, frameNumber : 0,
     }
 };
 
-// function that calculates vectors, field of view and pixel size with given Camera
+/*
+    Returns an array that contains unit vectors for the camera
+    it also contains the width/height of the image and pixel
+
+    At index:
+    0,1,2: camera's directional vector x, y, z
+    3,4,5: camera's right vector x, y, z
+    6,7,8: camera's up vector x, y, z
+    9, 10: width, height of image
+    11,12: width, height of each pixel
+*/
 function getPerspectiveInfo(Camera) {
     var viewPoint = new THREE.Vector3(Camera[0], Camera[1], Camera[2]),
         direction = new THREE.Vector3(Camera[3], Camera[4], Camera[5]),

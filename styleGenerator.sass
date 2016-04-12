@@ -3,10 +3,10 @@
  */
 
 // configuration CHANGE THIS
-$image_width: 300
-$image_height: 300
-$rows: 4
-$columns: 4
+$image_width: 600
+$image_height: 600
+$rows: 2
+$columns: 2
 // configuration end
 
 $canvas_width: $image_width / $columns
@@ -20,7 +20,18 @@ $topPad: 100
     $inverseCounter: abs($rows - 1 - $row)
     $left: $leftPad + $canvas_width * $col
     $top: $topPad + $canvas_height * $inverseCounter
-    #canvas#{$row}#{$col}
-      position: fixed
+    #gpuframe#{$row}#{$col}
+      position: absolute
       left: #{$left}px
       top: #{$top}px
+
+@for $row from 0 through $rows - 1
+  @for $col from 0 through $columns - 1
+    $inverseCounter: abs($rows - 1 - $row)
+    $left: $leftPad + $canvas_width * $col
+    $top: $topPad + $canvas_height * $inverseCounter
+    #cpuframe#{$row}#{$col}
+      position: absolute
+      left: #{$left}px
+      top: #{$top}px
+
