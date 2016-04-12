@@ -4,7 +4,7 @@
 
 
 // Kernel for rendering output, each thread colors one pixel on the image
-function render(mode, canvas_width, canvas_height) {
+function doit(mode, canvas_width, canvas_height) {
     var opt = {
         dimensions: [canvas_width, canvas_height],
         debug: false,
@@ -49,7 +49,8 @@ function render(mode, canvas_width, canvas_height) {
         // Normalizing the ray vector
         var length = getVectorLength(sum_x, sum_y, sum_z);
         var ray_x = sum_x / length,
-            ray_y = sum_y / length,
+            // flipping the ray's y direction to align with HTML canvace's pixel location
+            ray_y = -(sum_y / length),
             ray_z = sum_z / length;
 
         // Sphere intersection calculation

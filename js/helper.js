@@ -113,3 +113,24 @@ function lightIsBlockedByObject(shadowRay_x, shadowRay_y, shadowRay_z, shadowRay
     }
     return 0;
 }
+
+/*
+    This approximate Float32 values to unsigned bytes.
+    Currently, webGL does not support readPixels() with Float32 values as an output.
+    It also only supports RGBA format so we can't speed up the copying process by
+    not copying Alpha values.
+ */
+function copyImageDataFromWebGlCanvas(webGlCanvas) {
+    
+    var gpu_WebGLRenderingContext = webGlCanvas.getContext("webgl");
+
+    // reading pixel data from WebGlContext
+    var pixelData = new Uint8Array(CANVAS_WIDTH * CANVAS_HEIGHT * 4);
+    gpu_WebGLRenderingContext.readPixels(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT,
+        gpu_WebGLRenderingContext.RGBA, gpu_WebGLRenderingContext.UNSIGNED_BYTE, pixelData);
+
+    // wrapping pixelData in an ImageData object
+    var imgData = new ImageData(CANVAS_WIDTH, CANVAS_HEIGHT);
+    imgData.data.set(pixelData);
+    return imgData;
+}
