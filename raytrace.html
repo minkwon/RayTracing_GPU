@@ -34,8 +34,6 @@
     var ROWS = 1;
     var COLUMNS = 1;
 
-    var saveCPUMode = false;
-
     // configuration ends
 
     var CANVAS_WIDTH = IMAGE_WIDTH / COLUMNS;
@@ -160,13 +158,14 @@
                     // sends shader source for WebGl, to CPU
                     cpuRender(camera, lights, objects, info, arg);
                     drawn++;
-
+                    
                     // grab the corresponding canvas
                     screenCanvas = document.getElementById("frame" + row + col);
+
                     canvasCtx = screenCanvas.getContext("2d");
 
                     // copy the resulting ImageData generated and write over on the canvas that goes on the screen
-                    canvasCtx.drawImage(gpuRender.getCanvas(), 0, 0);
+                    canvasCtx.drawImage(cpuRender.getCanvas(), 0, 0);
                 }
                 index++;
 
