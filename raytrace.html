@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="js/gpu.min.js"></script>
+    <script src="js/gpu.js"></script>
     <script src="js/three.js"></script>
     <script src="js/helper.js"></script>
     <script src="js/scene.js"></script>
@@ -9,14 +9,16 @@
     <script src="js/preProcessor.js"></script>
     <link rel="stylesheet" type="text/css" href="styleGenerator.css">
     <meta charset="UTF-8">
-    <title>Ray tracing with javascript using GPU.js</title>
+    <title>400x400 size/4x4 canvas</title>
 </head>
 <body>
 
 <input type="button" value="Using GPU" onclick="return toggleMode(this);" />
+if only CPU mode works, Web GL context is lost. Refreshing the page should help.
+
 <div>
     <input type="button" value="OFF" onclick="return togglePreprocessing(this);" />
-    Switch to only redrawing canvases that contains objects
+    Switch to only redrawing canvases that contains objects (turn off border when toggling this)
 </div>
     <input type="button" value="OFF" onclick="return toggleBorder(this);" />
     Border visibility
@@ -31,8 +33,8 @@
 
     var IMAGE_WIDTH = 400;
     var IMAGE_HEIGHT = 400;
-    var ROWS = 1;
-    var COLUMNS = 1;
+    var ROWS = 4;
+    var COLUMNS = 4;
 
     // configuration ends
 
@@ -125,11 +127,12 @@
         var notDrawn = 0;
         for (row = 0; row < ROWS; row++) {
             for (col = 0; col < COLUMNS; col++) {
-                // If prePreprocessMode is on and if the element at the index of renderMask for a frame is 0
+                // If prePreprocessMode is on and if the element at the index of
+                // renderMask for a frame is 0
                 // skip drawing this canvas
                 if (preProcessMode) {
 
-                    // this is a hack condition to not draw f
+                    // this is a hack condition to not draw region
                     // as I could not get updateRenderMask to work properly
                     if (row <= 1 && col <= 1) {
                         notDrawn++;
@@ -158,10 +161,8 @@
                     // sends shader source for WebGl, to CPU
                     cpuRender(camera, lights, objects, info, arg);
                     drawn++;
-                    
                     // grab the corresponding canvas
                     screenCanvas = document.getElementById("frame" + row + col);
-
                     canvasCtx = screenCanvas.getContext("2d");
 
                     // copy the resulting ImageData generated and write over on the canvas that goes on the screen

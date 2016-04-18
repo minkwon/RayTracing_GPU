@@ -3,6 +3,81 @@
 #frame00 {
   position: absolute;
   left: 10px;
+  top: 420px; }
+
+#frame01 {
+  position: absolute;
+  left: 110px;
+  top: 420px; }
+
+#frame02 {
+  position: absolute;
+  left: 210px;
+  top: 420px; }
+
+#frame03 {
+  position: absolute;
+  left: 310px;
+  top: 420px; }
+
+#frame10 {
+  position: absolute;
+  left: 10px;
+  top: 320px; }
+
+#frame11 {
+  position: absolute;
+  left: 110px;
+  top: 320px; }
+
+#frame12 {
+  position: absolute;
+  left: 210px;
+  top: 320px; }
+
+#frame13 {
+  position: absolute;
+  left: 310px;
+  top: 320px; }
+
+#frame20 {
+  position: absolute;
+  left: 10px;
+  top: 220px; }
+
+#frame21 {
+  position: absolute;
+  left: 110px;
+  top: 220px; }
+
+#frame22 {
+  position: absolute;
+  left: 210px;
+  top: 220px; }
+
+#frame23 {
+  position: absolute;
+  left: 310px;
+  top: 220px; }
+
+#frame30 {
+  position: absolute;
+  left: 10px;
+  top: 120px; }
+
+#frame31 {
+  position: absolute;
+  left: 110px;
+  top: 120px; }
+
+#frame32 {
+  position: absolute;
+  left: 210px;
+  top: 120px; }
+
+#frame33 {
+  position: absolute;
+  left: 310px;
   top: 120px; }
 
 /*# sourceMappingURL=styleGenerator.css.map */
