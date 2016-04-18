@@ -23,6 +23,60 @@ var fps = { startTime : 0, frameNumber : 0,
 };
 
 /*
+    Mode button event handler
+
+    toggles between two modes
+    0: CPU mode, 1: GPU mode (default)
+*/
+var selection = 1;
+function toggleMode(el) {
+    if (el.value == "Using CPU") {
+        selection = 1;
+        el.value = "Using GPU";
+    } else {
+        selection = 0;
+        el.value = "Using CPU";
+    }
+}
+
+/*
+    PreProcessing mode button event handler
+    
+    toggles on or off
+    0: off (default), 1: on
+ */
+var preProcessMode = 0;
+function togglePreprocessing(el) {
+    if (el.value == "ON") {
+        preProcessMode = 0;
+        el.value = "OFF";
+    } else {
+        preProcessMode = 1;
+        el.value = "ON";
+    }
+}
+
+/*
+    Canvas border button event handler
+
+    toggles on or off
+    0: off (default), 1: on
+ */
+var borderVisible = 0;
+var changeBorderProperty = 0;
+function toggleBorder(el) {
+    if (el.value == "ON") {
+        borderVisible = 0;
+        changeBorderProperty = 1;
+        el.value = "OFF";
+    } else {
+        borderVisible = 1;
+        changeBorderProperty = 1;
+        el.value = "ON";
+    }
+}
+
+/*
     Returns an array that contains unit vectors for the camera
     it also contains the width/height of the image and pixel
 
@@ -114,23 +168,21 @@ function lightIsBlockedByObject(shadowRay_x, shadowRay_y, shadowRay_z, shadowRay
     return 0;
 }
 
-/*
-    This approximate Float32 values to unsigned bytes.
-    Currently, webGL does not support readPixels() with Float32 values as an output.
-    It also only supports RGBA format so we can't speed up the copying process by
-    not copying Alpha values.
- */
-function copyImageDataFromWebGlCanvas(webGlCanvas) {
-    
-    var gpu_WebGLRenderingContext = webGlCanvas.getContext("webgl");
+function updateRenderMask(RenderMask, Output, unitWidth) {
+    var canvasRows = ROWS;
+    var canvasColumns = COLUMNS;
+    var PP_columns = IMAGE_WIDTH / unitWidth;
+    var PP_rows = IMAGE_HEIGHT / unitWidth;
+    var needToRedraw = 0;
+    var index = 0;
 
-    // reading pixel data from WebGlContext
-    var pixelData = new Uint8Array(CANVAS_WIDTH * CANVAS_HEIGHT * 4);
-    gpu_WebGLRenderingContext.readPixels(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT,
-        gpu_WebGLRenderingContext.RGBA, gpu_WebGLRenderingContext.UNSIGNED_BYTE, pixelData);
+    // for every canvas
+    for (var r = 0; r < canvasRows; r++) {
+        for (var c = 0; c < canvasColumns; c++) {
 
-    // wrapping pixelData in an ImageData object
-    var imgData = new ImageData(CANVAS_WIDTH, CANVAS_HEIGHT);
-    imgData.data.set(pixelData);
-    return imgData;
+            RenderMask[index] = 1;
+            index++;
+        }
+    }
+
 }

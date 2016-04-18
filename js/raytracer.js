@@ -1,8 +1,3 @@
-/**
- * Created by minkwon on 11/04/2016.
- */
-
-
 // Kernel for rendering output, each thread colors one pixel on the image
 function doit(mode, canvas_width, canvas_height) {
     var opt = {
@@ -10,7 +5,6 @@ function doit(mode, canvas_width, canvas_height) {
         debug: false,
         graphical: true,
         safeTextureReadHack: false,
-        // might be able to delete row, col, canvas width
         constants: { OBJCOUNT: objects[0], SPHERE: ObjTyp.SPHERE },
         mode: mode
     };
@@ -26,22 +20,25 @@ function doit(mode, canvas_width, canvas_height) {
         var canvas_width = arg[5] / arg[4];
         var canvas_height = arg[6] / arg[3];
 
-        // scaling camera's right unit vector with pixel number + position offset
-        // var pixelToDraw_x = this.thread.x + canvas_width * col;
-        // var pixelToDraw_y = this.thread.y + canvas_height * row;
-        var pixelToDraw_x = canvas_width * col + this.thread.x;
-        var pixelToDraw_y = canvas_height * row + this.thread.y;
+        // scaling camera's right unit vector with pixel number + position offset where
+        //
+        // position offset x == canvas width * col index of this canvas
+        // position offset y == canvas height * row index of this canvas
+        //
+        var pixelToDraw_x = this.thread.x + canvas_width * col;
+        var pixelToDraw_y = this.thread.y + canvas_height * row;
 
         // (thread.x + canvas width * column number) * pixel width - half of camera width
         var right_x = info[3] * (pixelToDraw_x * info[11] - info[9] * 0.5),
             right_y = info[4] * (pixelToDraw_x * info[11] - info[9] * 0.5),
             right_z = info[5] * (pixelToDraw_x * info[11] - info[9] * 0.5);
+
         // same goes for camera's up unit vector scaling with
         // (thread.y + canvas height * row number) * pixel height - half of camera height
         var up_x = info[6] * (pixelToDraw_y * info[12] - info[10] * 0.5),
             up_y = info[7] * (pixelToDraw_y * info[12] - info[10] * 0.5),
             up_z = info[8] * (pixelToDraw_y * info[12] - info[10] * 0.5);
-        // summing eye vector, right vector, up vector
+        // summing (eye vector, right vector, up vector)
         var sum_x = info[0] + right_x + up_x,
             sum_y = info[1] + right_y + up_y,
             sum_z = info[2] + right_z + up_z;
@@ -49,8 +46,7 @@ function doit(mode, canvas_width, canvas_height) {
         // Normalizing the ray vector
         var length = getVectorLength(sum_x, sum_y, sum_z);
         var ray_x = sum_x / length,
-            // flipping the ray's y direction to align with HTML canvace's pixel location
-            ray_y = -(sum_y / length),
+            ray_y = sum_y / length,
             ray_z = sum_z / length;
 
         // Sphere intersection calculation
@@ -106,9 +102,9 @@ function doit(mode, canvas_width, canvas_height) {
                 }
             }
         }
-        // if it did not intersect any objects color it white and return
+        // if it did not intersect any objects color it white (background) and return
         if (intersectedObject == -1) {
-            this.color(0.95,0.95,0.95);
+            this.color(1,1,1);
             return 0;
         }
 
